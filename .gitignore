@@ -1,0 +1,22 @@
+# Dependências
+node_modules/
+
+# Configuração local (contém senha do banco)
+server/.env
+.env
+*.env
+!*.env.example
+
+# Backups e dumps do banco — contêm dados reais, nunca versionar
+backup/
+*.dump
+dump*.sql
+tecsource_*.sql
+
+# Logs e arquivos temporários
+*.log
+.DS_Store
+Thumbs.db
+
+# Artefato de build do GitHub Pages (gerado pelo workflow)
+_site/

@@ -1,0 +1,46 @@
+1. Hoje acontece que, na Maite Decorações e em várias confecções, o controlo do estoque de tecidos é feito de forma imprecisa e sem registo imediato das metragens cortadas.
+
+
+2. Isso gera aprovação de pedidos com base em saldos irreais, resultando em faltas de material na produção, compras de emergência, atrasos na entrega e prejuízos.
+
+
+3. Investigamos e descobrimos que as soluções de mercado são caras e complexas, enquanto as empresas precisam de um sistema simples, barato e focado no chão de fábrica.
+
+
+4. Por isso desenvolvemos o nosso Projeto, uma plataforma com painel de alertas, registo rápido de corte por QR Code e conciliação de estoque de fácil utilização.
+
+
+5. Nosso MVP demonstrou que a leitura rápida de etiquetas e a divisão de telas tornam o registo instantâneo e acessível para a equipe, sem interromper a produção de forma significativa.
+
+
+6. Agora queremos realizar experimentações do projeto na rotina real para validar a redução de perdas e o ganho de tempo na produção.
+
+
+começar o picht com um gancho nos primeiros 20-30 segundos e contextualizar e falar do problema
+
+Roteiro do Pitch:
+
+Já imaginou comprar algo numa loja e, na hora em que o vendedor vai buscar o seu produto ao estoque, ele descobre que o item simplesmente não existe? Parece um erro absurdo, mas é a realidade diária de centenas de confecções de tecidos. O sistema indica que há tecido para produzir uma encomenda, mas, no chão de fábrica, o rolo já acabou porque os cortes não são registrados na hora. Isso resulta em prazos estourados, clientes insatisfeitos e prejuízo direto com compras de emergência.
+
+Esse problema afeta diretamente confecções e ateliers de decoração. Na nossa investigação, observamos que o estoque no sistema não bate com o físico porque os cortes de tecido não são registrados na hora, gerando obstáculos na produção e compras de emergência.
+
+Nossa solução é um sistema de controle de estoque que permite registrar a baixa do tecido na hora do corte através do código QR, garantindo o saldo atualizado em tempo real para eliminar atrasos na entrega e compras desnecessárias.
+
+Nosso MVP foi desenvolvido para testar a usabilidade local de um registro rápido por QR Code no setor de corte. Através de simulações locais do fluxo de trabalho, observamos que a leitura digital reduz o tempo de lançamento e evita erros manuais. Com isso, aprendemos e ajustamos o sistema para ser o mais simples possível, garantindo que o saldo seja atualizado sem atrasar a operação.
+
+Nas soluções pesquisadas, encontramos softwares caros e difíceis de usar, além de controles manuais que não atualizam o estoque na hora do corte. A nossa proposta se diferencia por ser uma ferramenta simples, direta no chão de fábrica, onde a baixa é feita em segundos via QR Code, garantindo um estoque sempre preciso sem atrasar a produção e por uma fração do custo dos sistemas tradicionais.
+
+Hoje, a falta de registo imediato gera prejuízos e atrasos. Com o TecSource, transformamos essa rotina ao garantir baixas instantâneas por QR Code. Pretendemos reduzir drasticamente as divergências de estoque, medindo a precisão das metragens em tempo real e a eliminação de compras de emergência na produção.
+
+Depois do MVP, nosso próximo passo é rodar um teste piloto na rotina real da Maite Decorações. Como melhoria técnica prioritária, vamos integrar a impressão direta de etiquetas no recebimento e aprimorar o modo offline. Para levar o projeto adiante, buscamos consolidar esse piloto com a Maite Decorações e contar com o apoio do SENAI para expandir a solução para outras confecções da região.
+
+Começamos com o problema do estoque divergente, desenvolvemos o TecSource com baixa por QR Code e provamos em simulações que é possível manter a precisão sem atrasar a produção. Mais do que tecnologia, nosso projeto busca eliminar o desperdício e trazer eficiência real para as confecções da nossa região. Muito obrigado!
+
+Texto Contínuo para Conclusão de Fala:
+"Se a banca precisar de guardar apenas três coisas da nossa apresentação, são estas:
+
+O problema real é a falha no registo no momento do corte, que esvazia o estoque sem o sistema saber.
+
+A solução é o TecSource, que traz a baixa instantânea por QR Code de forma ultra-simples para o chão de fábrica.
+
+A nossa validação prova que é possível manter 100% de precisão no inventário sem desacelerar a produção."

@@ -1,0 +1,25 @@
+{
+    "name": "tecsource",
+    "version": "1.4.0",
+    "type": "module",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "node src/index.js",
+        "db:setup": "node scripts/db-setup.js",
+        "db:demo": "node scripts/db-setup.js --demo",
+        "db:check": "node scripts/db-check.js",
+        "db:reset": "node scripts/db-setup.js --reset",
+        "demo:reset": "node scripts/db-setup.js --reset --demo --yes",
+        "feira:reset": "node scripts/db-setup.js --feira --yes",
+        "feira:check": "node scripts/feira-check.mjs"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "dependencies": {
+        "dotenv": "^16.4.5",
+        "express": "^4.19.2",
+        "pg": "^8.13.1",
+        "qrcode": "^1.5.3"
+    }
+}

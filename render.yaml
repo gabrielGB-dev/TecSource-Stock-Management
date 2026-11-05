@@ -1,0 +1,42 @@
+# ============================================================
+# TecSource · Blueprint do Render
+# ------------------------------------------------------------
+# Publica apenas a API (Node/Express). O frontend estático é
+# servido pelo GitHub Pages a partir da pasta public/.
+#
+# Como usar:
+#   1. Render → New → Blueprint → selecione este repositório.
+#   2. Preencha as variáveis marcadas com sync: false.
+#   3. Copie a URL do serviço (https://<nome>.onrender.com) e
+#      coloque em public/config.js (apiBase) ou na variável
+#      API_BASE do repositório no GitHub (usada pelo workflow).
+#
+# O banco é o Supabase (PostgreSQL) — veja o README.
+# ============================================================
+services:
+  - type: web
+    name: tecsource-api
+    runtime: node
+    plan: free
+    # Região mais próxima do Brasil; troque se preferir outra.
+    region: ohio
+    rootDir: server
+    # npm install (e não ci) para regenerar o package-lock no build:
+    # o lock local ainda referencia o driver antigo (mysql2).
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      # Project Settings → Database → Connection string (URI).
+      # Prefira a porta 6543 (Connection Pooler).
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_SSL
+        value: "true"
+      # Restrinja a origem do Pages depois de saber a URL final.
+      # Ex.: https://usuario.github.io
+      - key: ORIGENS_PERMITIDAS
+        value: "*"

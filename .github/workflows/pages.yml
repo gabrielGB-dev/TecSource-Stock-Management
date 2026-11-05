@@ -1,0 +1,70 @@
+# ============================================================
+# TecSource · GitHub Pages
+# ------------------------------------------------------------
+# Publica o frontend estático (pasta public/) no GitHub Pages.
+# A API continua no Render; o endereço dela é injetado em
+# public/config.js a partir da variável de repositório API_BASE.
+#
+# Configuração única (uma vez):
+#   Settings → Secrets and variables → Actions → Variables
+#   → New repository variable
+#       Name:  API_BASE
+#       Value: https://seu-servico.onrender.com
+#
+# Depois: Settings → Pages → Source = "GitHub Actions".
+# Cada push na branch main publica de novo.
+# ============================================================
+name: Publicar no GitHub Pages
+
+on:
+  push:
+    # Repositórios novos usam "main"; "master" cobre os antigos.
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar o Pages
+        uses: actions/configure-pages@v5
+        with:
+          # Habilita o Pages automaticamente na primeira execução
+          # (Settings → Pages → Source passa a ser "GitHub Actions").
+          enablement: true
+
+      - name: Apontar o frontend para a API do Render
+        env:
+          API_BASE: ${{ vars.API_BASE }}
+        run: |
+          if [ -n "$API_BASE" ]; then
+            sed -i "s|apiBase: ''|apiBase: '$API_BASE'|" public/config.js
+            echo "apiBase configurado para $API_BASE"
+            grep -n "apiBase" public/config.js
+          else
+            echo "::warning::A variável API_BASE não está definida. O site será publicado sem API e as telas mostrarão erro de conexão. Defina em Settings → Secrets and variables → Actions → Variables."
+          fi
+
+      - name: Empacotar o site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Publicar
+        id: deploy
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TecSource · Gestão de Estoque</title>
+    <meta name="description" content="Controle de estoque de tecidos da MAITE Decorações.">
+    <meta name="theme-color" content="#06263f">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Identificação do operador -->
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-card">
+            <div class="login-logo">
+                <img src="img/logo-tecsource.jpg" alt="TecSource — Stock Management" width="1000" height="742">
+            </div>
+            <h1>MAITE DECORAÇÕES LTDA</h1>
+            <p class="login-sub">TecSource · Gestão de Estoque de Tecidos</p>
+            <label>Seu nome
+                <input id="loginNome" placeholder="Ex.: Ana Souza" autocomplete="name" enterkeyhint="go">
+            </label>
+            <button id="btnEntrar" class="btn-primary wide">Entrar no sistema</button>
+            <p class="login-foot">Seu nome fica salvo neste navegador e aparece no histórico.</p>
+        </div>
+    </div>
+
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <span class="brand-logo">
+                    <img src="img/logo-tecsource.jpg" alt="TecSource — Stock Management" width="1000"
+                        height="742">
+                </span>
+                <small>MAITE Decorações</small>
+            </div>
+            <nav class="menu" aria-label="Menu principal">
+                <button class="menu-item active" data-tab="painel">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <rect x="3" y="3" width="7" height="9" />
+                        <rect x="14" y="3" width="7" height="5" />
+                        <rect x="14" y="12" width="7" height="9" />
+                        <rect x="3" y="16" width="7" height="5" />
+                    </svg>Painel</button>
+                <button class="menu-item" data-tab="cortar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <circle cx="6" cy="6" r="3" />
+                        <circle cx="6" cy="18" r="3" />
+                        <line x1="20" y1="4" x2="8.12" y2="15.88" />
+                        <line x1="14.47" y1="14.48" x2="20" y2="20" />
+                        <line x1="8.12" y1="8.12" x2="12" y2="12" />
+                    </svg>Corte</button>
+                <button class="menu-item" data-tab="contagem">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M9 11l3 3L22 4" />
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                    </svg>Contagem</button>
+                <button class="menu-item" data-tab="cadastro">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <line x1="12" y1="8" x2="12" y2="16" />
+                        <line x1="8" y1="12" x2="16" y2="12" />
+                    </svg>Novo tecido</button>
+                <button class="menu-item" data-tab="historico">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>Histórico</button>
+            </nav>
+            <div class="sidebar-foot">
+                <div class="operador"><span class="dot"></span><span id="operadorNome">—</span></div>
+                <button id="btnMobile" class="link">Abrir no celular (QR)</button>
+                <button id="btnSair" class="link">Sair do sistema</button>
+                <small>v1.4.0 · uso interno</small>
+            </div>
+        </aside>
+
+        <div class="main">
+            <header class="topbar">
+                <h2 id="pageTitle">Painel de estoque</h2>
+                <div class="topbar-right">
+                    <button id="btnAjuda" class="topbar-help" type="button" title="Abrir o guia rápido">
+                        <span aria-hidden="true">?</span> Como usar
+                    </button>
+                    <span id="connStatus" class="conn ok"><span class="dot"></span>Online</span>
+                    <span id="clock" class="clock"></span>
+                </div>
+            </header>
+
+            <main class="content">
+
+                <!-- Guia fixo do stand: 3 passos sempre à vista -->
+                <div class="guia-feira" role="note" aria-label="Como usar o sistema em 3 passos">
+                    <div class="guia-passo">
+                        <span class="guia-num">1</span>
+                        <span><b>Escaneie</b> o QR do tecido — ou busque pelo nome</span>
+                    </div>
+                    <div class="guia-passo">
+                        <span class="guia-num">2</span>
+                        <span><b>Escolha</b> o rolo e informe os metros cortados</span>
+                    </div>
+                    <div class="guia-passo">
+                        <span class="guia-num">3</span>
+                        <span><b>Confirme</b> — o saldo atualiza na hora</span>
+                    </div>
+                    <p class="guia-nota">Quer experimentar? Cadastre seu próprio tecido em <b>Novo tecido</b> — o QR é
+                        gerado na hora. Dúvida? Chame alguém do estande.</p>
+                </div>
+
+                <!-- PAINEL -->
+                <section id="tab-painel" class="tabpane active">
+                    <div class="kpis" id="kpis"></div>
+                    <div id="alertas"></div>
+
+                    <div id="dicaBoasVindas" class="welcome hidden">
+                        <div>
+                            <strong>Primeira vez por aqui?</strong>
+                            <span>Use <b>Como usar</b> no topo para ver o guia. Os botões <b>?</b> explicam cada
+                                função.</span>
+                        </div>
+                        <button id="btnFecharDica" class="link" type="button">Entendi</button>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-head">
+                            <div class="panel-title">
+                                <h3>Metragem cortada</h3>
+                                <button class="help-dot" type="button" aria-label="O que é metragem cortada?"
+                                    data-tip="Total de metros registrados em cortes. Hoje e nos últimos 7 e 30 dias. Atualiza a cada 30 segundos e após cada corte.">?</button>
+                            </div>
+                            <small>contagem automática via QR</small>
+                        </div>
+                        <div class="panel-body cortes-body">
+                            <div class="corte-kpis" id="corteKpis"></div>
+                            <div id="corteTop" class="corte-top"></div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-head">
+                            <div class="panel-title">
+                                <h3>Tecidos</h3>
+                                <button class="help-dot" type="button" aria-label="Como ler a lista de tecidos"
+                                    data-tip="Saldo = metros disponíveis. Mínimo = alerta de reposição. Consumo 30d = metros cortados no período. Cobertura = quantos dias o saldo dura. Use ＋ Estoque para dar entrada em um tecido já cadastrado.">?</button>
+                            </div>
+                            <small id="qtdConsulta"></small>
+                        </div>
+                        <div class="toolbar">
+                            <input id="buscaTecido" class="busca" type="search"
+                                placeholder="Buscar por nome ou código..." autocomplete="off">
+                            <select id="filtroSituacao" class="filtro" aria-label="Filtrar por situação">
+                                <option value="">Todas as situações</option>
+                                <option value="alerta">Abaixo do mínimo</option>
+                                <option value="ok">OK</option>
+                                <option value="baixo">Baixo</option>
+                                <option value="critico">Crítico</option>
+                            </select>
+                        </div>
+                        <div class="table-wrap">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="th-sort" data-ordem="nome">Tecido<span class="seta"></span></th>
+                                        <th class="num th-sort" data-ordem="saldo">Saldo / mínimo<span
+                                                class="seta"></span></th>
+                                        <th class="num">Rolos</th>
+                                        <th class="num th-sort" data-ordem="consumo">Consumo 30d<span
+                                                class="seta"></span></th>
+                                        <th class="num th-sort" data-ordem="cobertura">
+                                            <span class="th-with-help">Cobertura
+                                                <button class="help-dot" type="button"
+                                                    aria-label="O que é cobertura?"
+                                                    data-tip="Quantos dias o saldo atual dura, considerando o consumo dos últimos 30 dias. — significa que não houve consumo no período.">?</button>
+                                            </span><span class="seta"></span>
+                                        </th>
+                                        <th>Situação</th>
+                                        <th class="num">Estoque</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyTecidos"></tbody>
+                            </table>
+                        </div>
+                        <p id="emptyTec" class="empty hidden">Nenhum tecido encontrado para os filtros atuais.</p>
+                    </div>
+                </section>
+
+                <!-- CORTE -->
+                <section id="tab-cortar" class="tabpane">
+                    <div class="panel narrow">
+                        <div class="panel-head">
+                            <div class="panel-title">
+                                <h3>Registrar corte</h3>
+                                <button class="help-dot" type="button" aria-label="Como registrar um corte"
+                                    data-tip="1. Escaneie o QR do tecido (ou digite o código). 2. Escolha o rolo na ficha. 3. Informe os metros cortados e confirme. O saldo cai na hora.">?</button>
+                            </div>
+                            <small>1 escaneie · 2 informe · 3 confirme</small>
+                        </div>
+                        <div class="panel-body">
+                            <p id="corteHojeInfo" class="corte-live">Hoje: —</p>
+                            <button id="btnScanner" class="btn-secondary scan-btn" type="button">📷 Escanear QR do
+                                tecido</button>
+                            <div id="reader" class="hidden"></div>
+                            <div class="row">
+                                <div class="campo-sugestoes">
+                                    <label>QR do tecido ou código do rolo
+                                        <input id="codigoSaida" placeholder="TEC:TEX-001" autocapitalize="characters"
+                                            autocomplete="off" spellcheck="false">
+                                    </label>
+                                    <div id="sugestoesSaida" class="sugestoes hidden" role="listbox"
+                                        aria-label="Sugestões de tecido"></div>
+                                </div>
+                                <button id="btnBuscarRolo" class="btn-primary" type="button">Buscar</button>
+                            </div>
+                            <div id="roloInfo" class="rolo-info hidden"></div>
+                            <div id="formSaida" class="hidden">
+                                <small class="step">Informe o consumo</small>
+                                <div class="row">
+                                    <label>Metros cortados
+                                        <input id="metrosSaida" type="text" inputmode="decimal"
+                                            placeholder="ex.: 12,5" autocomplete="off">
+                                    </label>
+                                    <label>Responsável
+                                        <input id="usuarioSaida" autocomplete="name">
+                                    </label>
+                                </div>
+                                <button id="btnConfirmarSaida" class="btn-primary wide" type="button">Confirmar
+                                    corte</button>
+                            </div>
+                            <p class="field-help">Escaneie o QR do tecido para abrir a ficha e escolher o rolo.
+                                Códigos antigos de rolo (ROL-…) continuam aceitos. Aceita vírgula decimal (ex.: 12,5).</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CONTAGEM -->
+                <section id="tab-contagem" class="tabpane">
+                    <div class="panel narrow">
+                        <div class="panel-head">
+                            <div class="panel-title">
+                                <h3>Contagem</h3>
+                                <button class="help-dot" type="button" aria-label="Como funciona a contagem"
+                                    data-tip="Escaneie o QR do tecido e escolha o rolo, ou digite o código antigo do rolo. Informe a metragem real: a diferença vira um ajuste no histórico, com o responsável.">?</button>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <p class="hint">Meça o rolo, informe a metragem real e confirme. A diferença é registrada no
+                                histórico como ajuste. Se a diferença for zero, nada é gravado.</p>
+                            <button id="btnScannerAjuste" class="btn-secondary scan-btn" type="button">📷 Escanear QR
+                                do tecido</button>
+                            <div id="readerAjuste" class="hidden"></div>
+                            <div class="row three">
+                                <div class="campo-sugestoes">
+                                    <label>QR do tecido ou código do rolo
+                                        <input id="codigoAjuste" placeholder="TEC:TEX-001" autocapitalize="characters"
+                                            autocomplete="off" spellcheck="false">
+                                    </label>
+                                    <div id="sugestoesAjuste" class="sugestoes hidden" role="listbox"
+                                        aria-label="Sugestões de tecido"></div>
+                                </div>
+                                <label>Metragem real (m)
+                                    <input id="metragemReal" type="text" inputmode="decimal" placeholder="ex.: 38,5"
+                                        autocomplete="off">
+                                </label>
+                                <label>Responsável
+                                    <input id="usuarioAjuste" autocomplete="name">
+                                </label>
+                            </div>
+                            <button id="btnAjuste" class="btn-primary" type="button">Registrar contagem</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- NOVO TECIDO -->
+                <section id="tab-cadastro" class="tabpane">
+                    <div class="panel narrow">
+                        <div class="panel-head">
+                            <div class="panel-title">
+                                <h3>Novo tecido</h3>
+                                <button class="help-dot" type="button" aria-label="Como cadastrar um tecido"
+                                    data-tip="Código e nome identificam o tecido. O estoque mínimo dispara alertas. A localização ajuda a achar o tecido na prateleira. O estoque inicial é opcional: informe os metros por rolo e a quantidade. Cada tecido recebe uma etiqueta QR única.">?</button>
+                            </div>
+                            <small>o cadastro pode já incluir os primeiros rolos</small>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-grid">
+                                <label>Código
+                                    <input id="tecCodigo" placeholder="TEX-001" autocapitalize="characters"
+                                        autocomplete="off" spellcheck="false">
+                                </label>
+                                <label>Nome
+                                    <input id="tecNome" placeholder="Linho Off-White" autocomplete="off">
+                                </label>
+                            </div>
+                            <label>Estoque mínimo (m)
+                                <input id="tecMin" type="text" inputmode="decimal" value="10" placeholder="ex.: 10"
+                                    autocomplete="off">
+                            </label>
+                            <p class="field-help">Abaixo deste saldo, o tecido aparece como “baixo” ou “crítico”.</p>
+
+                            <label>Localização (opcional)
+                                <input id="tecLocal" placeholder="Corredor A · Prateleira 2" autocomplete="off">
+                            </label>
+                            <p class="field-help">Onde o tecido fica fisicamente. Ajuda a encontrar o rolo na
+                                prateleira e aparece no painel.</p>
+
+                            <small class="step">Estoque inicial (opcional)</small>
+                            <div class="row">
+                                <label>Metros por rolo
+                                    <input id="tecMetros" type="text" inputmode="decimal" placeholder="ex.: 50"
+                                        autocomplete="off">
+                                </label>
+                                <label>Quantidade de rolos
+                                    <input id="tecRoloQtd" type="number" min="1" max="100" value="1"
+                                        inputmode="numeric">
+                                </label>
+                            </div>
+                            <p id="tecLotePreview" class="preview-total">Sem estoque inicial: apenas o cadastro do
+                                tecido.</p>
+                            <label>Responsável pelo cadastro
+                                <input id="usuarioTecido" autocomplete="name">
+                            </label>
+                            <button id="btnTecido" class="btn-primary wide" type="button">Salvar tecido</button>
+                            <div id="etiquetaTecido" class="etiqueta hidden"></div>
+                        </div>
+                    </div>
+                    <div class="panel narrow tip-card">
+                        <div class="panel-body">
+                            <strong>Já tem o tecido cadastrado?</strong>
+                            <p>Não crie outro. Volte ao <b>Painel</b> e clique em <b>＋ Estoque</b> no tecido para criar
+                                rolos novos ou repor metros em um rolo existente.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- HISTÓRICO -->
+                <section id="tab-historico" class="tabpane">
+                    <div class="panel">
+                        <div class="panel-head">
+                            <div class="panel-title">
+                                <h3>Histórico</h3>
+                                <button class="help-dot" type="button" aria-label="Como ler o histórico"
+                                    data-tip="Registro de todas as entradas, cortes, ajustes e estornos. Entrada soma, saída diminui e ajuste mostra a diferença da contagem física. Use ↩ Estornar para desfazer um lançamento — nada é apagado do histórico.">?</button>
+                            </div>
+                            <div class="panel-head-actions">
+                                <select id="filtroMov" class="filtro small" aria-label="Filtrar movimentações">
+                                    <option value="">Todos os tipos</option>
+                                    <option value="entrada">Entradas</option>
+                                    <option value="saida">Cortes</option>
+                                    <option value="ajuste">Ajustes</option>
+                                    <option value="estorno">Estornos</option>
+                                </select>
+                                <button id="btnAtualizarHistorico" class="btn-secondary" type="button">Atualizar</button>
+                            </div>
+                        </div>
+                        <div class="table-wrap">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Data / hora</th>
+                                        <th>Tipo</th>
+                                        <th>Tecido</th>
+                                        <th>Rolo</th>
+                                        <th class="num">Metros</th>
+                                        <th>Responsável</th>
+                                        <th class="num">Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyMov"></tbody>
+                            </table>
+                        </div>
+                        <p id="emptyMov" class="empty hidden">Nenhuma movimentação registrada.</p>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Acesso pelo celular -->
+    <div id="mobileOverlay" class="modal-overlay hidden">
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="mobileTitulo">
+            <h3 id="mobileTitulo">Acessar no celular</h3>
+            <p>Escaneie o QR Code com a câmera do celular para abrir a interface mobile.</p>
+            <div id="mobileQr" class="mobile-qr"><span class="muted">Gerando QR Code…</span></div>
+            <code id="mobileUrl" class="mobile-url"></code>
+            <p id="mobileHint" class="modal-hint hidden"></p>
+            <div class="modal-actions">
+                <a class="btn-primary" href="mobile.html">Abrir nesta janela</a>
+                <button id="btnFecharMobile" class="btn-secondary" type="button">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Adicionar estoque a um tecido -->
+    <div id="modalEstoque" class="modal-overlay hidden">
+        <div class="modal-card form" role="dialog" aria-modal="true" aria-labelledby="estoqueTitulo">
+            <h3 id="estoqueTitulo">Adicionar estoque</h3>
+            <p id="estoqueResumo" class="modal-sub"></p>
+
+            <div class="mode-toggle" id="modoEstoque" role="group" aria-label="Destino do estoque">
+                <button type="button" class="mode active" data-modo="novo">Novo(s) rolo(s)</button>
+                <button type="button" class="mode" data-modo="rolo">Repor em rolo</button>
+            </div>
+
+            <div id="blocoNovo">
+                <div class="row">
+                    <label>Metros por rolo
+                        <input id="estoqueMetros" type="text" inputmode="decimal" placeholder="ex.: 50,5"
+                            autocomplete="off">
+                    </label>
+                    <label>Quantidade de rolos
+                        <input id="estoqueQtd" type="number" min="1" max="100" value="1" inputmode="numeric">
+                    </label>
+                </div>
+                <p id="estoquePreview" class="preview-total">Informe os metros para ver o total.</p>
+            </div>
+
+            <div id="blocoRolo" class="hidden">
+                <label>Rolo que vai receber os metros
+                    <select id="estoqueRolo"></select>
+                </label>
+                <label>Metros a repor
+                    <input id="estoqueMetrosRolo" type="text" inputmode="decimal" placeholder="ex.: 20"
+                        autocomplete="off">
+                </label>
+                <p class="field-help">A metragem é somada ao saldo do rolo escolhido. O rolo continua com o mesmo
+                    código interno, visível na ficha do tecido.</p>
+            </div>
+
+            <label>Responsável
+                <input id="usuarioEstoque" autocomplete="name">
+            </label>
+            <label>Observação (opcional)
+                <input id="obsEstoque" placeholder="ex.: recebimento do fornecedor" autocomplete="off">
+            </label>
+
+            <button id="btnAddEstoque" class="btn-primary wide" type="button">Adicionar estoque</button>
+
+            <div id="estoqueResultado" class="resultado hidden"></div>
+
+            <button id="btnFecharEstoque" class="btn-secondary" type="button">Fechar</button>
+        </div>
+    </div>
+
+    <!-- Guia rápido -->
+    <div id="helpOverlay" class="modal-overlay hidden">
+        <div class="modal-card help" role="dialog" aria-modal="true" aria-labelledby="helpTitulo">
+            <h3 id="helpTitulo">Como usar o TecSource</h3>
+            <p class="modal-sub">Um resumo de cada função. Leva menos de dois minutos.</p>
+            <div class="help-steps">
+                <div class="help-step">
+                    <span>1</span>
+                    <div><strong>Cadastre o tecido</strong>
+                        <p>Em <b>Novo tecido</b>, informe código, nome e estoque mínimo. Se já chegou material, informe
+                            os metros por rolo e a quantidade.</p>
+                    </div>
+                </div>
+                <div class="help-step">
+                    <span>2</span>
+                    <div><strong>Imprima e fixe a etiqueta</strong>
+                        <p>Cada tecido recebe um QR Code único. Imprima, recorte e fixe na prateleira ou no local do
+                            tecido.</p>
+                    </div>
+                </div>
+                <div class="help-step">
+                    <span>3</span>
+                    <div><strong>Dê entrada em mais material</strong>
+                        <p>No <b>Painel</b>, clique em <b>＋ Estoque</b> no tecido. Crie rolos novos ou reponha metros em
+                            um rolo que já existe.</p>
+                    </div>
+                </div>
+                <div class="help-step">
+                    <span>4</span>
+                    <div><strong>Registre o corte</strong>
+                        <p>Em <b>Corte</b>, escaneie o QR do tecido, escolha o rolo na ficha, informe os metros e
+                            confirme. O saldo cai na hora.</p>
+                    </div>
+                </div>
+                <div class="help-step">
+                    <span>5</span>
+                    <div><strong>Confira a contagem física</strong>
+                        <p>Se a metragem medida for diferente do sistema, use <b>Contagem</b>. A diferença fica registrada
+                            como ajuste.</p>
+                    </div>
+                </div>
+                <div class="help-step">
+                    <span>6</span>
+                    <div><strong>Acompanhe</strong>
+                        <p>O <b>Painel</b> mostra alertas, cobertura e metragem cortada. O <b>Histórico</b> mostra tudo o
+                            que foi lançado.</p>
+                    </div>
+                </div>
+            </div>
+            <p class="hint">Dica: valores aceitam vírgula (12,5). O botão <b>?</b> ao lado de cada título explica
+                aquela função.</p>
+            <button id="btnFecharAjuda" class="btn-secondary" type="button">Fechar</button>
+        </div>
+    </div>
+
+    <!-- Ficha do tecido (aberta pelo QR) -->
+    <div id="modalTecido" class="modal-overlay hidden">
+        <div class="modal-card ficha" role="dialog" aria-modal="true" aria-labelledby="fichaTitulo">
+            <div class="ficha-top">
+                <div>
+                    <h3 id="fichaTitulo">Tecido</h3>
+                    <p id="fichaSub" class="modal-sub"></p>
+                </div>
+                <button id="btnFecharFicha" class="ficha-close" type="button" aria-label="Fechar ficha">×</button>
+            </div>
+            <div id="fichaCorpo"></div>
+        </div>
+    </div>
+
+    <!-- Dica flutuante dos botões "?" -->
+    <div id="dicaPop" class="dica-pop hidden" role="tooltip"></div>
+
+    <div id="printArea" class="print-area" aria-hidden="true"></div>
+
+    <div id="toast" role="status" aria-live="polite"></div>
+
+    <script src="vendor/html5-qrcode.min.js"></script>
+    <script src="config.js"></script>
+    <script src="fila.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

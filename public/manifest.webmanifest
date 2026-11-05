@@ -1,0 +1,50 @@
+{
+    "name": "TecSource · MAITE Decorações",
+    "short_name": "TecSource",
+    "description": "Gestão de estoque de tecidos da MAITE Decorações — painel, corte, contagem e histórico.",
+    "id": "./mobile.html",
+    "start_url": "./mobile.html",
+    "scope": "./",
+    "display": "standalone",
+    "display_override": ["standalone", "minimal-ui"],
+    "orientation": "portrait",
+    "background_color": "#06263f",
+    "theme_color": "#06263f",
+    "lang": "pt-BR",
+    "dir": "ltr",
+    "categories": ["business", "productivity", "utilities"],
+    "icons": [
+        {
+            "src": "icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "icons/maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Corte",
+            "short_name": "Corte",
+            "url": "./mobile.html#cortar",
+            "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+        },
+        {
+            "name": "Contagem",
+            "short_name": "Contagem",
+            "url": "./mobile.html#contagem",
+            "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+        }
+    ]
+}
